@@ -4,6 +4,7 @@
   <groupId>id.co.catatkas</groupId><artifactId>catatkas</artifactId><version>0.0.1-SNAPSHOT</version>
   <parent><groupId>org.springframework.boot</groupId><artifactId>spring-boot-starter-parent</artifactId><version>3.4.5</version><relativePath/></parent>
   <properties><java.version>17</java.version></properties>
+  
   <dependencies>
     <dependency><groupId>org.springframework.boot</groupId><artifactId>spring-boot-starter-web</artifactId></dependency>
     <dependency><groupId>org.springframework.boot</groupId><artifactId>spring-boot-starter-thymeleaf</artifactId></dependency>
