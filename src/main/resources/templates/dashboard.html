@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="id" xmlns:th="http://www.thymeleaf.org">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>CatatKas</title><link rel="stylesheet" th:href="@{/style.css}"></head>
+<body><header><div class="brand"><span class="logo">₨</span><div><h1>CatatKas</h1><small>Pencatatan keuangan sederhana</small></div></div></header>
+<main>
+<section class="intro"><p>DASHBOARD</p><h2>Ringkasan Keuangan</h2><span>Catat pemasukan dan pengeluaran dengan mudah.</span></section>
+<section class="summary">
+<div class="card income"><label>Total Pemasukan</label><h3 th:text="${'Rp ' + #numbers.formatDecimal(totalPemasukan,0,'POINT',2,'COMMA')}">Rp 0</h3></div>
+<div class="card expense"><label>Total Pengeluaran</label><h3 th:text="${'Rp ' + #numbers.formatDecimal(totalPengeluaran,0,'POINT',2,'COMMA')}">Rp 0</h3></div>
+<div class="card balance"><label>Saldo</label><h3 th:text="${'Rp ' + #numbers.formatDecimal(totalPemasukan.subtract(totalPengeluaran),0,'POINT',2,'COMMA')}">Rp 0</h3></div>
+</section>
+<section class="panel"><h2>Tambah Transaksi</h2><p>Isi data transaksi berikut.</p>
+<form th:action="@{/transaksi/simpan}" th:object="${transaksi}" method="post" class="form">
+<div><label>Tanggal</label><input type="date" th:field="*{tanggal}" required></div>
+<div><label>Jenis</label><select th:field="*{jenis}" required><option value="">Pilih jenis</option><option value="Pemasukan">Pemasukan</option><option value="Pengeluaran">Pengeluaran</option></select></div>
+<div><label>Kategori</label><input type="text" th:field="*{kategori}" placeholder="Contoh: Makan, Gaji" required></div>
+<div><label>Jumlah (Rp)</label><input type="number" min="0.01" step="0.01" th:field="*{jumlah}" placeholder="25000" required></div>
+<div class="wide"><label>Keterangan</label><input type="text" th:field="*{keterangan}" placeholder="Catatan transaksi" required></div>
+<div class="wide"><button type="submit">+ Simpan Transaksi</button></div></form></section>
+<section class="panel"><h2>Daftar Transaksi</h2><div class="table-wrap"><table><thead><tr><th>Tanggal</th><th>Jenis</th><th>Kategori</th><th>Keterangan</th><th>Jumlah</th><th>Aksi</th></tr></thead>
+<tbody><tr th:each="item : ${transaksiList}"><td th:text="${item.tanggal}"></td><td><span class="tag" th:classappend="${item.jenis == 'Pemasukan' ? ' green' : ' red'}" th:text="${item.jenis}"></span></td><td th:text="${item.kategori}"></td><td th:text="${item.keterangan}"></td><td th:text="${'Rp ' + #numbers.formatDecimal(item.jumlah,0,'POINT',2,'COMMA')}"></td><td><form th:action="@{/transaksi/hapus/{id}(id=${item.id})}" method="post" onsubmit="return confirm('Hapus transaksi ini?')"><button class="delete" type="submit">Hapus</button></form></td></tr>
+<tr th:if="${#lists.isEmpty(transaksiList)}"><td colspan="6" class="empty">Belum ada transaksi.</td></tr></tbody></table></div></section>
+<footer>CatatKas · Project pembelajaran Java Spring Boot</footer></main></body></html>

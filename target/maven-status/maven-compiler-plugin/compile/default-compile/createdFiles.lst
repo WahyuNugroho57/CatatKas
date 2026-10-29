@@ -1,0 +1,4 @@
+id\co\catatkas\catatkas\model\Transaksi.class
+id\co\catatkas\catatkas\repository\TransaksiRepository.class
+id\co\catatkas\catatkas\controller\DashboardController.class
+id\co\catatkas\catatkas\CatatKasApplication.class
