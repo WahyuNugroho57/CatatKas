@@ -1,115 +1,225 @@
-
 <!DOCTYPE html>
 <html lang="id" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>CatatKas</title>
-    <link rel="stylesheet" th:href="@{/style.css}">
+    <title>CatatKas · Ringkasan Keuangan</title>
+    <link rel="stylesheet" th:href="@{/style.css(v=2)}">
 </head>
 <body>
-    <header>
-        <div class="brand">
-            <span class="logo">₨</span>
-            <div>
-                <h1>CatatKas</h1>
-                <small>Pencatatan keuangan sederhana</small>
-            </div>
+    <header class="topbar">
+        <div class="topbar-inner">
+            <a class="brand" th:href="@{/}">
+                <span class="logo" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                         stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M3 8.5A2.5 2.5 0 0 1 5.5 6H18a2 2 0 0 1 2 2v1"/>
+                        <path d="M3 8.5V17a3 3 0 0 0 3 3h12a3 3 0 0 0 3-3v-5a2 2 0 0 0-2-2H3.5"/>
+                        <circle cx="17" cy="14.5" r="1.2" fill="currentColor" stroke="none"/>
+                    </svg>
+                </span>
+                <span class="brand-text">
+                    <h1>CatatKas</h1>
+                    <small>Keuangan rapi, hidup tenang</small>
+                </span>
+            </a>
+
+            <a class="btn-ghost" th:href="@{/#tambah}">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                     stroke-linecap="round" aria-hidden="true">
+                    <path d="M12 5v14M5 12h14"/>
+                </svg>
+                Tambah Transaksi
+            </a>
         </div>
     </header>
 
-    <main>
-        <section class="intro">
-            <p>DASHBOARD</p>
-            <h2>Ringkasan Keuangan</h2>
-            <span>Catat pemasukan dan pengeluaran dengan mudah.</span>
+    <main class="container">
+        <section class="hero">
+            <div>
+                <p class="eyebrow"><span></span>Dashboard</p>
+                <h2>Ringkasan Keuangan</h2>
+                <p class="muted">Catat pemasukan dan pengeluaran, lalu lihat kondisi kasmu sekilas.</p>
+            </div>
+            <div class="hero-chip">
+                <span class="hero-chip-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                         stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M4 6h16M4 12h16M4 18h10"/>
+                    </svg>
+                </span>
+                <span><b th:text="${#lists.size(transaksiList)}">0</b> transaksi tercatat</span>
+            </div>
         </section>
 
         <section class="summary">
-            <div class="card income">
-                <label>Total Pemasukan</label>
-                <h3 th:text="${'Rp ' + #numbers.formatDecimal(totalPemasukan,0,'POINT',0,'COMMA')}">Rp 0</h3>
-            </div>
-            <div class="card expense">
-                <label>Total Pengeluaran</label>
-                <h3 th:text="${'Rp ' + #numbers.formatDecimal(totalPengeluaran,0,'POINT',0,'COMMA')}">Rp 0</h3>
-            </div>
-            <div class="card balance">
-                <label>Saldo</label>
+            <article class="card card-balance">
+                <div class="card-top">
+                    <span class="card-icon balance-icon" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                             stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M3 8.5A2.5 2.5 0 0 1 5.5 6H18a2 2 0 0 1 2 2v1"/>
+                            <path d="M3 8.5V17a3 3 0 0 0 3 3h12a3 3 0 0 0 3-3v-5a2 2 0 0 0-2-2H3.5"/>
+                            <circle cx="17" cy="14.5" r="1.2" fill="currentColor" stroke="none"/>
+                        </svg>
+                    </span>
+                    <span class="card-label">Saldo Saat Ini</span>
+                </div>
                 <h3 th:text="${'Rp ' + #numbers.formatDecimal(totalPemasukan.subtract(totalPengeluaran),0,'POINT',0,'COMMA')}">Rp 0</h3>
-            </div>
+                <p class="card-hint" th:text="|Dari ${#lists.size(transaksiList)} transaksi|">Dari 0 transaksi</p>
+            </article>
+
+            <article class="card card-income">
+                <div class="card-top">
+                    <span class="card-icon income-icon" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                             stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M3 17l6-6 4 4 8-8"/>
+                            <path d="M15 7h6v6"/>
+                        </svg>
+                    </span>
+                    <span class="card-label">Total Pemasukan</span>
+                </div>
+                <h3 th:text="${'Rp ' + #numbers.formatDecimal(totalPemasukan,0,'POINT',0,'COMMA')}">Rp 0</h3>
+                <p class="card-hint">Uang yang masuk</p>
+            </article>
+
+            <article class="card card-expense">
+                <div class="card-top">
+                    <span class="card-icon expense-icon" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                             stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M3 7l6 6 4-4 8 8"/>
+                            <path d="M21 11v6h-6"/>
+                        </svg>
+                    </span>
+                    <span class="card-label">Total Pengeluaran</span>
+                </div>
+                <h3 th:text="${'Rp ' + #numbers.formatDecimal(totalPengeluaran,0,'POINT',0,'COMMA')}">Rp 0</h3>
+                <p class="card-hint">Uang yang keluar</p>
+            </article>
         </section>
 
-        <section class="panel">
-            <h2>Tambah Transaksi</h2>
-            <p>Isi data transaksi berikut.</p>
-            <form th:action="@{/transaksi/simpan}" th:object="${transaksi}" method="post" class="form">
-                <div>
-                    <label>Tanggal</label>
-                    <input type="date" th:field="*{tanggal}" required>
+        <div class="content-grid">
+            <section class="panel form-panel" id="tambah">
+                <div class="panel-head">
+                    <div>
+                        <h2>Tambah Transaksi</h2>
+                        <p>Isi data transaksi di bawah ini.</p>
+                    </div>
                 </div>
-                <div>
-                    <label>Jenis</label>
-                    <select th:field="*{jenis}" required>
-                        <option value="">Pilih jenis</option>
-                        <option value="Pemasukan">Pemasukan</option>
-                        <option value="Pengeluaran">Pengeluaran</option>
-                    </select>
-                </div>
-                <div>
-                    <label>Kategori</label>
-                    <input type="text" th:field="*{kategori}" placeholder="Contoh: Makan, Gaji" required>
-                </div>
-                <div>
-                    <label>Jumlah (Rp)</label>
-                    <input type="number" min="0.01" step="0.01" th:field="*{jumlah}" placeholder="25000" required>
-                </div>
-                <div class="wide">
-                    <label>Keterangan</label>
-                    <input type="text" th:field="*{keterangan}" placeholder="Catatan transaksi" required>
-                </div>
-                <div class="wide">
-                    <button type="submit">+ Simpan Transaksi</button>
-                </div>
-            </form>
-        </section>
 
-        <section class="panel">
-            <h2>Daftar Transaksi</h2>
-            <div class="table-wrap">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Tanggal</th>
-                            <th>Jenis</th>
-                            <th>Kategori</th>
-                            <th>Keterangan</th>
-                            <th>Jumlah</th>
-                            <th>Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr th:each="item : ${transaksiList}">
-                            <td th:text="${item.tanggal}"></td>
-                            <td>
-                                <span class="tag" th:classappend="${item.jenis == 'Pemasukan' ? ' green' : ' red'}" th:text="${item.jenis}"></span>
-                            </td>
-                            <td th:text="${item.kategori}"></td>
-                            <td th:text="${item.keterangan}"></td>
-                            <td th:text="${'Rp ' + #numbers.formatDecimal(item.jumlah,0,'POINT',0,'COMMA')}"></td>
-                            <td>
-                                <form th:action="@{/transaksi/hapus/{id}(id=${item.id})}" method="post" onsubmit="return confirm('Hapus transaksi ini?')">
-                                    <button class="delete" type="submit">Hapus</button>
-                                </form>
-                            </td>
-                        </tr>
-                        <tr th:if="${#lists.isEmpty(transaksiList)}">
-                            <td colspan="6" class="empty">Belum ada transaksi.</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </section>
+                <form th:action="@{/transaksi/simpan}" th:object="${transaksi}" method="post" class="form">
+                    <div>
+                        <label for="tanggal">Tanggal</label>
+                        <input id="tanggal" type="date" th:field="*{tanggal}" required>
+                        <span class="field-error" th:if="${#fields.hasErrors('tanggal')}" th:errors="*{tanggal}"></span>
+                    </div>
+
+                    <div>
+                        <label for="jenis">Jenis</label>
+                        <select id="jenis" th:field="*{jenis}" required>
+                            <option value="">Pilih jenis</option>
+                            <option value="Pemasukan">Pemasukan</option>
+                            <option value="Pengeluaran">Pengeluaran</option>
+                        </select>
+                        <span class="field-error" th:if="${#fields.hasErrors('jenis')}" th:errors="*{jenis}"></span>
+                    </div>
+
+                    <div>
+                        <label for="kategori">Kategori</label>
+                        <input id="kategori" type="text" th:field="*{kategori}" placeholder="Contoh: Makan, Gaji" required>
+                        <span class="field-error" th:if="${#fields.hasErrors('kategori')}" th:errors="*{kategori}"></span>
+                    </div>
+
+                    <div>
+                        <label for="jumlah">Jumlah (Rp)</label>
+                        <input id="jumlah" type="number" min="0.01" step="0.01" th:field="*{jumlah}" placeholder="25000" required>
+                        <span class="field-error" th:if="${#fields.hasErrors('jumlah')}" th:errors="*{jumlah}"></span>
+                    </div>
+
+                    <div class="wide">
+                        <label for="keterangan">Keterangan</label>
+                        <input id="keterangan" type="text" th:field="*{keterangan}" placeholder="Catatan transaksi" required>
+                        <span class="field-error" th:if="${#fields.hasErrors('keterangan')}" th:errors="*{keterangan}"></span>
+                    </div>
+
+                    <div class="wide">
+                        <button type="submit" class="btn-primary">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+                                 stroke-linecap="round" aria-hidden="true">
+                                <path d="M12 5v14M5 12h14"/>
+                            </svg>
+                            Simpan Transaksi
+                        </button>
+                    </div>
+                </form>
+            </section>
+
+            <section class="panel list-panel">
+                <div class="panel-head">
+                    <div>
+                        <h2>Daftar Transaksi</h2>
+                        <p>Riwayat pemasukan dan pengeluaranmu.</p>
+                    </div>
+                    <span class="count-badge" th:text="|${#lists.size(transaksiList)} data|">0 data</span>
+                </div>
+
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Tanggal</th>
+                                <th>Jenis</th>
+                                <th>Kategori</th>
+                                <th>Keterangan</th>
+                                <th class="align-right">Jumlah</th>
+                                <th class="align-right">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="item : ${transaksiList}">
+                                <td class="cell-date" th:text="${item.tanggal}">2026-01-01</td>
+                                <td>
+                                    <span class="tag" th:classappend="${item.jenis == 'Pemasukan' ? ' green' : ' red'}" th:text="${item.jenis}"></span>
+                                </td>
+                                <td><span class="category" th:text="${item.kategori}"></span></td>
+                                <td class="cell-note" th:text="${item.keterangan}"></td>
+                                <td class="amount" th:classappend="${item.jenis == 'Pemasukan' ? 'amount-in' : 'amount-out'}"
+                                    th:text="${(item.jenis == 'Pemasukan' ? '+ ' : '- ') + 'Rp ' + #numbers.formatDecimal(item.jumlah,0,'POINT',0,'COMMA')}">
+                                    Rp 0
+                                </td>
+                                <td class="align-right">
+                                    <form th:action="@{/transaksi/hapus/{id}(id=${item.id})}" method="post"
+                                          onsubmit="return confirm('Hapus transaksi ini?')">
+                                        <button class="delete" type="submit" title="Hapus transaksi">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                                                 stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                                <path d="M4 7h16M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2M6 7l1 12a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-12"/>
+                                                <path d="M10 11v6M14 11v6"/>
+                                            </svg>
+                                            Hapus
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                            <tr th:if="${#lists.isEmpty(transaksiList)}">
+                                <td colspan="6" class="empty">
+                                    <span class="empty-icon" aria-hidden="true">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"
+                                             stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M4 7h16v12H4z"/>
+                                            <path d="M4 7l2-3h12l2 3M9 12h6"/>
+                                        </svg>
+                                    </span>
+                                    Belum ada transaksi. Yuk mulai catat yang pertama!
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
 
         <footer>CatatKas · Project pembelajaran Java Spring Boot</footer>
     </main>
