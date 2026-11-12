@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>CatatKas · Ringkasan Keuangan</title>
-    <link rel="stylesheet" th:href="@{/style.css(v=2)}">
+    <link rel="stylesheet" th:href="@{/style.css(v=3)}">
 </head>
 <body>
     <header class="topbar">
@@ -138,13 +138,13 @@
                         <span class="field-error" th:if="${#fields.hasErrors('jumlah')}" th:errors="*{jumlah}"></span>
                     </div>
 
-                    <div class="wide">
+                    <div class="span-3">
                         <label for="keterangan">Keterangan</label>
                         <input id="keterangan" type="text" th:field="*{keterangan}" placeholder="Catatan transaksi" required>
                         <span class="field-error" th:if="${#fields.hasErrors('keterangan')}" th:errors="*{keterangan}"></span>
                     </div>
 
-                    <div class="wide">
+                    <div class="form-action">
                         <button type="submit" class="btn-primary">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
                                  stroke-linecap="round" aria-hidden="true">
